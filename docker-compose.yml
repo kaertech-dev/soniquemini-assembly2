@@ -1,0 +1,12 @@
+services:
+  soniquemini_assembly2:
+    build: .
+    image: ledboard_assembly2
+    container_name: soniquemini_assembly2
+    ports:
+      - "5071:5071"
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - FLASK_ENV=production

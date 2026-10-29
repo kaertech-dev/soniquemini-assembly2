@@ -9,3 +9,5 @@ check ledboard serial previous station before assembly2 to accept passing unit.
 record data in ledboard_assembly2 including the controlboard serial number
 
 update main table assembly2=1
+
+port=5071
