@@ -11,6 +11,8 @@ BOARD_STATIONS = {
 REQUIRED_STATIONS = (
     "test",
     "lasermarking",
+    "vi",
+    "assembly1",
 )
 MAX_FAIL_REPETITIONS = 3
 
