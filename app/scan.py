@@ -5,7 +5,7 @@ from app.db import get_conn, query_all, query_one
 BOARD_STATIONS = {
     "controlboard": {
         "table": "soniquemini.controlboard_main",
-        "stations": ("progtest"),
+        "stations": ("progtest",),
     },
 }
 REQUIRED_STATIONS = (
@@ -74,7 +74,7 @@ def lookup_unit(serial_num: str):
     """Check ledboard_main for the serial and its station statuses."""
     return query_one(
         """
-        SELECT serial_num, po_num, test, lasermarking, assembly, finaltest,
+        SELECT serial_num, po_num, test, lasermarking, assembly2, finaltest,
                fvi, packaging
         FROM soniquemini.ledboard_main
         WHERE BINARY serial_num = BINARY %s
@@ -88,7 +88,7 @@ def already_assembly(serial_num: str):
     return query_one(
         """
         SELECT serial_num, po_num, operator_en, shift, date_time, test_rep, status
-        FROM soniquemini.ledboard_assembly
+        FROM soniquemini.ledboard_assembly2
         WHERE serial_num = %s AND status = 1
         LIMIT 1
         """,
@@ -103,7 +103,7 @@ def _fail_serials(serial_num: str):
 def _failed_attempt_rows(serial_num: str, cursor=None):
     sql = """
         SELECT serial_num
-        FROM soniquemini.ledboard_assembly
+        FROM soniquemini.ledboard_assembly2
         WHERE serial_num IN (%s, %s, %s) AND status = 0
     """
     params = _fail_serials(serial_num)
@@ -167,7 +167,7 @@ def record_assembly(
         cur.execute(
             """
             SELECT serial_num, po_num, operator_en, shift, date_time, test_rep, status
-            FROM soniquemini.ledboard_assembly
+            FROM soniquemini.ledboard_assembly2
             WHERE serial_num = %s AND status = 1
             LIMIT 1
             FOR UPDATE
@@ -182,14 +182,14 @@ def record_assembly(
         cur.execute(
             """
             UPDATE soniquemini.ledboard_main
-            SET assembly = 1
+            SET assembly2 = 1
             WHERE BINARY serial_num = BINARY %s
             """,
             (serial_num,),
         )
         cur.execute(
             """
-            INSERT INTO soniquemini.ledboard_assembly
+            INSERT INTO soniquemini.ledboard_assembly2
                 (serial_num, po_num, operator_en, shift, controlboard,
                  date_time, test_rep, remarks, status)
             VALUES (%s, %s, %s, %s, %s, %s, 1, "", 1)
@@ -199,7 +199,6 @@ def record_assembly(
                 po_num,
                 operator_en,
                 shift,
-                "",
                 controlboard,
                 datetime.now(),
             ),
@@ -242,7 +241,7 @@ def record_fail(
 
         cur.execute(
             """
-            INSERT INTO soniquemini.ledboard_assembly
+            INSERT INTO soniquemini.ledboard_assembly2
                 (serial_num, po_num, operator_en, shift, controlboard,
                  date_time, test_rep, remarks, status)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, 0)
@@ -252,7 +251,6 @@ def record_fail(
                 po_num,
                 operator_en,
                 shift,
-                "",
                 controlboard,
                 datetime.now(),
                 repetition,
