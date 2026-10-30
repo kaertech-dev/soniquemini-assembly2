@@ -76,8 +76,7 @@ def lookup_unit(serial_num: str):
     """Check ledboard_main for the serial and its station statuses."""
     return query_one(
         """
-        SELECT serial_num, po_num, test, lasermarking, assembly2, finaltest,
-               fvi, packaging
+        SELECT serial_num, po_num, test, lasermarking, assembly1
         FROM soniquemini.ledboard_main
         WHERE BINARY serial_num = BINARY %s
         LIMIT 1
