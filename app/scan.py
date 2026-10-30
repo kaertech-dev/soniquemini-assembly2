@@ -5,7 +5,7 @@ from app.db import get_conn, query_all, query_one
 BOARD_STATIONS = {
     "controlboard": {
         "table": "soniquemini.controlboard_main",
-        "stations": ("progtest", "vi"),
+        "stations": ("progtest"),
     },
 }
 REQUIRED_STATIONS = (
