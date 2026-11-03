@@ -9,13 +9,13 @@ BOARD_STATIONS = {
     },
 }
 REQUIRED_STATIONS = (
+    "soldering",
+    "vi",
     "test",
     "lasermarking",
-    "vi",
     "assembly1",
 )
 MAX_FAIL_REPETITIONS = 3
-
 
 def lookup_board(serial_num: str, board_type: str):
     """Look up a controlboard and its required station results."""
