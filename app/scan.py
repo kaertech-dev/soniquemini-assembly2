@@ -9,13 +9,13 @@ BOARD_STATIONS = {
     },
 }
 REQUIRED_STATIONS = (
+    "soldering",
+    "vi",
     "test",
     "lasermarking",
-    "vi",
     "assembly1",
 )
 MAX_FAIL_REPETITIONS = 3
-
 
 def lookup_board(serial_num: str, board_type: str):
     """Look up a controlboard and its required station results."""
@@ -71,12 +71,11 @@ def process_board_check(serial_num: str, board_type: str):
         "ok": True,
     }
 
-
 def lookup_unit(serial_num: str):
     """Check ledboard_main for the serial and its station statuses."""
     return query_one(
         """
-        SELECT serial_num, po_num, test, lasermarking, vi, assembly1
+        SELECT serial_num, po_num, soldering, vi, test, lasermarking, assembly1
         FROM soniquemini.ledboard_main
         WHERE BINARY serial_num = BINARY %s
         LIMIT 1
